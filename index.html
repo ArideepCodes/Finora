@@ -23,7 +23,7 @@
   --emerald-glow: rgba(52,211,153,0.15);
   --blue: #60a5fa;
   --blue-dim: #3b82f6;
-  --rose: #fb7185;
+  --rose: #ff7590;
   --amber: #fbbf24;
   --text: #f4f4f5;
   --text-2: #a1a1aa;
@@ -287,11 +287,11 @@ body {
 /* ── OVERVIEW CARDS ── */
 .overview-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
+  align-items: stretch;
 }
-
 .overview-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
   border: 1px solid rgba(255,255,255,0.08);
@@ -312,17 +312,27 @@ body {
   top: 0; left: 0; right: 0;
   height: 2px;
 }
+
+/* Standardized Glows and Colors */
 .overview-card.green::before { background: linear-gradient(90deg, var(--emerald), transparent); }
-.overview-card.blue::before  {
-  background: linear-gradient(90deg, var(--blue), transparent);
-  box-shadow: 0 0 18px rgba(96,165,250,0.45);
+.overview-card.green .overview-card-icon { background: var(--emerald-glow); color: var(--emerald); }
+
+.overview-card.blue::before  { background: linear-gradient(90deg, var(--blue), transparent); }
+.overview-card.blue .overview-card-icon { background: rgba(96,165,250,0.15); color: var(--blue); }
+
+.overview-card.rose::before {
+  background: linear-gradient(90deg, var(--rose), transparent);
+  box-shadow: 0 0 24px rgba(255,117,144,0.45);
 }
 
-.overview-card.rose::before  {
-  background: linear-gradient(90deg, var(--rose), transparent);
-  box-shadow: 0 0 18px rgba(251,113,133,0.45);
+.overview-card.rose .overview-card-icon {
+  background: rgba(255,117,144,0.22);
+  color: #ff8faa;
+  box-shadow: 0 0 18px rgba(255,117,144,0.18);
 }
+
 .overview-card.amber::before { background: linear-gradient(90deg, var(--amber), transparent); }
+.overview-card.amber .overview-card-icon { background: rgba(251,191,36,0.15); color: var(--amber); }
 
 .overview-card-label {
   font-size: 11px;
@@ -354,20 +364,32 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 15px;
 }
-.overview-card.green .overview-card-icon { background: var(--emerald-glow); color: var(--emerald); }
-.overview-card.blue .overview-card-icon {
-  background: rgba(96,165,250,0.22);
-  color: #7cb8ff;
-  box-shadow: 0 0 18px rgba(96,165,250,0.18);
+.overview-card.rose .overview-card-label {
+  color: rgba(255,255,255,0.72);
 }
 
-.overview-card.rose .overview-card-icon {
-  background: rgba(251,113,133,0.22);
-  color: #ff8fa1;
-  box-shadow: 0 0 18px rgba(251,113,133,0.18);
+.overview-card.rose .overview-card-value {
+  color: #ff7590 !important;
+  opacity: 1 !important;
 }
-.overview-card.amber .overview-card-icon { background: rgba(251,191,36,0.12); color: var(--amber); }
 
+.overview-card.rose .overview-card-change {
+  color: rgba(255,255,255,0.72) !important;
+}
+ .overview-card.green .overview-card-icon,
+.overview-card.blue .overview-card-icon,
+.overview-card.rose .overview-card-icon,
+.overview-card.amber .overview-card-icon {
+  opacity: 1;
+}
+
+.overview-card.green,
+.overview-card.blue,
+.overview-card.rose,
+.overview-card.amber {
+  filter: none;
+  opacity: 1;
+}
 .text-emerald { color: var(--emerald); }
 .text-rose    { color: var(--rose); }
 .text-blue    { color: var(--blue); }
@@ -791,15 +813,16 @@ body {
   .nav-item { padding: 8px 10px; font-size: 12px; }
   .topbar { padding: 14px 20px; }
   .page { padding: 20px; }
-  .overview-grid { grid-template-columns: 1fr 1fr; }
+  
   .two-col { grid-template-columns: 1fr; }
   .three-col { grid-template-columns: 1fr; }
   .budget-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 540px) {
-  .overview-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .overview-card-value { font-size: 22px; }
+
   .modal { padding: 20px; }
+
   .form-row { grid-template-columns: 1fr; }
 }
 
@@ -818,7 +841,6 @@ body::before {
 </head>
 <body>
 
-<!-- LOADER -->
 <div id="loader">
   <div class="loader-logo" id="loaderLogo">Fin<span>ora</span></div>
   <div class="loader-sub" id="loaderSub">Smart Finance Tracker</div>
@@ -826,10 +848,8 @@ body::before {
   <div class="loader-credit">Developed by Arideep Kanshabanik</div>
 </div>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ADD/EDIT TRANSACTION MODAL -->
 <div class="modal-overlay" id="txModal">
   <div class="modal">
     <div class="modal-header">
@@ -878,7 +898,6 @@ body::before {
   </div>
 </div>
 
-<!-- BUDGET MODAL -->
 <div class="modal-overlay" id="budgetModal">
   <div class="modal">
     <div class="modal-header">
@@ -914,11 +933,9 @@ body::before {
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
 <div class="layout">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
       <h1>Fin<span>ora</span></h1>
@@ -960,7 +977,6 @@ body::before {
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div class="topbar-left">
@@ -973,7 +989,6 @@ body::before {
       </div>
     </div>
 
-    <!-- DASHBOARD PAGE -->
     <div class="page active" id="page-dashboard">
       <div class="overview-grid" id="overviewGrid">
         <div class="overview-card green">
@@ -988,7 +1003,6 @@ body::before {
           <div class="overview-card-value text-blue" id="ov-income">₹0</div>
           <div class="overview-card-change" id="ov-income-change"></div>
         </div>
-        <!-- FIX: card 3 — was structurally identical but change div had buggy conditional logic -->
         <div class="overview-card rose">
           <div class="overview-card-icon"><i class="fa fa-arrow-up"></i></div>
           <div class="overview-card-label">Expenses This Month</div>
@@ -1004,7 +1018,6 @@ body::before {
       </div>
 
       <div class="two-col">
-        <!-- RECENT TRANSACTIONS -->
         <div class="card">
           <div class="section-header">
             <div>
@@ -1016,7 +1029,6 @@ body::before {
           <div class="tx-list" id="recentTxList"></div>
         </div>
 
-        <!-- BUDGET OVERVIEW -->
         <div class="card">
           <div class="section-header">
             <div>
@@ -1030,7 +1042,6 @@ body::before {
       </div>
 
       <div class="two-col">
-        <!-- MONTHLY CHART -->
         <div class="card">
           <div class="section-header">
             <div>
@@ -1041,7 +1052,6 @@ body::before {
           <canvas id="monthlyChart" height="200"></canvas>
         </div>
 
-        <!-- CATEGORY BREAKDOWN -->
         <div class="card">
           <div class="section-header">
             <div>
@@ -1054,7 +1064,6 @@ body::before {
       </div>
     </div>
 
-    <!-- TRANSACTIONS PAGE -->
     <div class="page" id="page-transactions">
       <div class="filter-row">
         <div class="filter-pill active" onclick="setFilter('all',this)">All</div>
@@ -1075,7 +1084,6 @@ body::before {
       </div>
     </div>
 
-    <!-- BUDGET PAGE -->
     <div class="page" id="page-budget">
       <div class="budget-set-card">
         <div class="section-header">
@@ -1111,7 +1119,6 @@ body::before {
       </div>
     </div>
 
-    <!-- SAVINGS PAGE -->
     <div class="page" id="page-savings">
       <div class="two-col">
         <div class="card">
@@ -1152,7 +1159,6 @@ body::before {
       </div>
     </div>
 
-    <!-- ANALYTICS PAGE -->
     <div class="page" id="page-analytics">
       <div class="three-col">
         <div class="card-sm" style="background:var(--surface);">
@@ -1184,7 +1190,6 @@ body::before {
       </div>
     </div>
 
-    <!-- INSIGHTS PAGE -->
     <div class="page" id="page-insights">
       <div id="insightsList"></div>
     </div>
@@ -1196,7 +1201,7 @@ body::before {
 <script>
 // ──────────────────────────────────────────
 // STATE & STORAGE
-// FIX: initialize from localStorage ONLY — no demo data, no seed function
+// Safe initialization from localStorage ONLY — no demo data.
 // ──────────────────────────────────────────
 let transactions = [];
 let budget = {
@@ -1218,8 +1223,8 @@ let budget = {
       const parsed = JSON.parse(storedBudget);
       // Merge so new cat keys are never missing
       budget = {
-        total: parsed.total || 0,
-        savingsTarget: parsed.savingsTarget || 0,
+        total: parseFloat(parsed.total) || 0,
+        savingsTarget: parseFloat(parsed.savingsTarget) || 0,
         cats: Object.assign({ food:0, travel:0, shopping:0, bills:0, health:0, education:0, entertainment:0, others:0 }, parsed.cats || {})
       };
     }
@@ -1257,15 +1262,17 @@ function catIcon(cat, type) {
 // FORMAT
 // ──────────────────────────────────────────
 function fmt(n) {
-  // FIX: guard against NaN/undefined
   n = parseFloat(n) || 0;
-  if (n >= 100000) return '₹' + (n/100000).toFixed(1) + 'L';
-  if (n >= 1000)   return '₹' + (n/1000).toFixed(1) + 'K';
-  return '₹' + Math.round(n).toLocaleString();
+  let sign = n < 0 ? '-' : '';
+  let absN = Math.abs(n);
+  if (absN >= 100000) return sign + '₹' + (absN/100000).toFixed(1) + 'L';
+  if (absN >= 1000)   return sign + '₹' + (absN/1000).toFixed(1) + 'K';
+  return sign + '₹' + Math.round(absN).toLocaleString('en-IN');
 }
 function fmtFull(n) {
   n = parseFloat(n) || 0;
-  return '₹' + Math.abs(n).toLocaleString('en-IN', {minimumFractionDigits:0});
+  let sign = n < 0 ? '-' : '';
+  return sign + '₹' + Math.abs(n).toLocaleString('en-IN', {minimumFractionDigits:0});
 }
 function fmtDate(d) {
   const dt = new Date(d);
@@ -1513,7 +1520,6 @@ function txItemHTML(tx, showActions = true) {
 
 // ──────────────────────────────────────────
 // DASHBOARD
-// FIX: card 3 change text uses safePct and only shows budget info when budget is set
 // ──────────────────────────────────────────
 function renderDashboard() {
   const cmTxs = currMonthTxs();
@@ -1536,12 +1542,10 @@ function renderDashboard() {
        <span class="text-muted">${pctUsed}% of budget used</span>`;
   } else {
     document.getElementById('ov-income-change').innerHTML =
-`<span style="color:rgba(255,255,255,0.75)">
-<i class="fa fa-circle-info"></i> Active this month
-</span>`;
+      `<span style="color:rgba(255,255,255,0.75)"><i class="fa fa-circle-info"></i> Active this month</span>`;
   }
 
-  // FIX Card 3: expense change — safe logic, only shows warning when budget is actually set
+  // Card 3: expense change — safe logic, only shows warning when budget is actually set
   if (budget.total > 0) {
     const overBudget = exp > budget.total * 0.9;
     document.getElementById('ov-expense-change').innerHTML =
@@ -1551,9 +1555,7 @@ function renderDashboard() {
        <span class="text-muted">Budget: ${fmt(budget.total)}</span>`;
   } else {
     document.getElementById('ov-expense-change').innerHTML =
-`<span style="color:rgba(255,255,255,0.75)">
-<i class="fa fa-circle-info"></i> Tracking expenses
-</span>`;
+      `<span style="color:rgba(255,255,255,0.75)"><i class="fa fa-circle-info"></i> Tracking expenses</span>`;
   }
 
   // Card 4: savings vs target
@@ -1651,7 +1653,7 @@ function renderCategoryChart(cmTxs) {
   const ctx    = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // FIX: guard against empty data — draw a placeholder message instead of crashing
+  // Guard against empty data — draw a placeholder message instead of crashing
   if (data.length === 0) {
     ctx.fillStyle = '#52525b';
     ctx.textAlign = 'center';
@@ -1854,7 +1856,7 @@ function renderAnalyticsPage() {
     }
   });
 
-  // Pie — FIX: only render if there's data, otherwise show message on canvas
+  // Pie — only render if there's data, otherwise show message on canvas
   destroyChart('analyticsPie');
   const allExpTxs = transactions.filter(t => t.type === 'expense');
   const pieVals   = cats.map(c => catSpend(allExpTxs, c));
@@ -1864,6 +1866,7 @@ function renderAnalyticsPage() {
   const pieCanvas = document.getElementById('analyticsPieChart');
   const pieCtx    = pieCanvas.getContext('2d');
   pieCtx.clearRect(0, 0, pieCanvas.width, pieCanvas.height);
+  
   if (pieData.length > 0) {
     charts['analyticsPie'] = new Chart(pieCtx, {
       type: 'pie',
@@ -1910,7 +1913,6 @@ function renderAnalyticsPage() {
 // INSIGHTS PAGE — safe with zero/empty data
 // ──────────────────────────────────────────
 function renderInsightsPage() {
-  // FIX: show friendly empty state when no transactions exist
   if (transactions.length === 0) {
     document.getElementById('insightsList').innerHTML = `
       <div class="empty-state" style="margin-top:40px;">
@@ -1933,7 +1935,7 @@ function renderInsightsPage() {
   let topCat = null, topAmt = 0;
   cats.forEach(c => { const s = catSpend(cmTxs, c); if (s > topAmt) { topAmt = s; topCat = c; } });
 
-  const pctUsed       = safePct(exp, budget.total);
+  const pctUsed        = safePct(exp, budget.total);
   const projectedSpend = avgDaily * daysInMonth;
   const svPct          = safePct(savings > 0 ? savings : 0, budget.savingsTarget);
 
@@ -2024,8 +2026,8 @@ window.addEventListener('DOMContentLoaded', () => {
     new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 
   // Chart.js global defaults
-  Chart.defaults.color           = '#71717a';
-  Chart.defaults.font.family     = 'DM Sans';
+  Chart.defaults.color             = '#71717a';
+  Chart.defaults.font.family       = 'DM Sans';
   Chart.defaults.animation.duration = 800;
 
   // Loader animation
@@ -2054,7 +2056,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 2000);
 
   // Close modals on overlay click
-  document.getElementById('txModal').addEventListener('click',     e => { if (e.target === e.currentTarget) closeModal(); });
+  document.getElementById('txModal').addEventListener('click',      e => { if (e.target === e.currentTarget) closeModal(); });
   document.getElementById('budgetModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeBudgetModal(); });
 });
 </script>
